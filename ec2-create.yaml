@@ -13,5 +13,5 @@
       security_group: "{{ sg-id }}"
       image_id: "{{ ami_id }}"
       tags:
-        name: "{{ item }}"
+        Name: "{{ item }}"
    # loop: {{ instances }}  
