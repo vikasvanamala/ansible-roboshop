@@ -4,6 +4,8 @@
   vars:
     ami_id: ami-09c813fb71547fc4f
     sg_id: sg-0cc1cfc505eb56913
+    instances: 
+    - mysql
 
   tasks:
   - name: create ec2-instance
