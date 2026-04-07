@@ -14,4 +14,4 @@
       image_id: "{{ ami_id }}"
       tags:
         Name: "{{ item }}"
-   # loop: {{ instances }}  
+    loop: {{ instances }}  
