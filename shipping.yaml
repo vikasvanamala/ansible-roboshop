@@ -23,7 +23,7 @@
       name: roboshop
       comment: roboshop system user
       system: true
-      shell: /sbin/login
+      shell: /sbin/nologin
       home: /app
 
   - name: remove app directory 
@@ -34,7 +34,7 @@
   - name: creating app directory 
     ansible.builtin.file:
       path: /app
-      state: present
+      state: directory
 
   - name: removing the shipping application file
     ansible.builtin.file:
