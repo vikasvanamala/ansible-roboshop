@@ -49,7 +49,6 @@
     
   - name: installing dependencies
     community.general.npm:
-      name: npm install
       path: /app
 
   - name: copy catalogue service
