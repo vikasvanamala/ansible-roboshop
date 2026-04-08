@@ -69,7 +69,7 @@
 
   - name: connect to mongodb catalogue
     ansible.builtin.command: mongosh <mangodb ipaddress> --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')"
-      register: catalogue_output
+    register: catalogue_output
 
   - name: load products into mongo db
     ansible.builtin.shell: mongosh --host MONGODB-SERVER-IPADDRESS </app/db/master-data.js
@@ -78,7 +78,7 @@
   - name: daemon reload
     ansible.builtin.systemd_service:
       name: catalogue
-      enabled: true
+      enabled: yes
       state: started
       daemon_reload: true
 
