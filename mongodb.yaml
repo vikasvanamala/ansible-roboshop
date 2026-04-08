@@ -1,5 +1,5 @@
 - name: setup mongodb 
-  hosts: mangodb
+  hosts: mongodb
   become: yes
   tasks:
   - name: copy mondodb repo
