@@ -42,14 +42,13 @@
       dest: /tmp/cart.zip
 
   - name: extracting cart application
-    ansible.builtin.archive:
+    ansible.builtin.unarchive:
       src: /tmp/cart.zip
       dest: /app
       remote_src: yes
 
   - name: installing dependencies
     community.general.npm:
-      name: npm install
       path: /app
 
   - name: setup systemd cart service

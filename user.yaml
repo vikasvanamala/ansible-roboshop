@@ -50,7 +50,6 @@
   - name: installing dependencies
     community.general.npm:
       path: /app
-      state: present
 
   - name: copy user service
     ansible.builtin.copy:

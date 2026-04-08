@@ -47,7 +47,7 @@
       dest: /tmp/shipping.zip
 
   - name: unzipping application
-    ansible.builtin.archive:
+    ansible.builtin.unarchive:
       src: /tmp/shipping.zip
       dest: /app
       remote_src: yes
@@ -83,7 +83,7 @@
     ansible.buiktin.systemd_service:
       name: shipping
       system: started
-      enabled: true
-      daemon_reload:true
+      enabled: yes
+      daemon_reload: true
 
 

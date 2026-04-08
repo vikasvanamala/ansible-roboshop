@@ -40,7 +40,7 @@
       dest: /tmp/payment.zip
 
   - name: unzip the application
-    ansible.builtin.archive:
+    ansible.builtin.unarchive:
       src: /tmp/payment.zip
       dest: /app
       remote_src: yes
@@ -60,7 +60,7 @@
   - name: reloading and starting payment server
     ansible.builtin.systemd_service:
       name: payment
-      enabled: true
+      enabled: yes
       state: started
       daemon_reload: true
 
