@@ -80,10 +80,10 @@
 
 
   - name: reload and start the shipping server
-    ansible.buiktin.systemd_service:
+    ansible.builtin.systemd_service:
       name: shipping
       system: started
-      enabled: yes
+      enabled: true
       daemon_reload: true
 
 
