@@ -67,11 +67,11 @@
       state: present
 
   - name: connect to mongodb catalogue
-    ansible.builtin.command: mongosh <mangodb ipaddress> --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')"
+    ansible.builtin.command: mongosh 172.31.11.76 --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')"
     register: catalogue_output
 
   - name: load products into mongo db
-    ansible.builtin.shell: mongosh --host MONGODB-SERVER-IPADDRESS </app/db/master-data.js
+    ansible.builtin.shell: mongosh --host 172.31.11.76 </app/db/master-data.js
     when: catalogue_output.stdout | int < 0
 
   - name: daemon reload
