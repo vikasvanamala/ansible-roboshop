@@ -1,0 +1,89 @@
+- name: setup shipping
+  hosts: shipping
+  become: yes
+  tasks:
+  - name: installing maven
+    ansible.builtin.package:
+      name: "{{ item }}"
+      state: present
+    loop: 
+    - maven
+    - mysql
+
+  - name: installing python and mysql libraries
+    ansible.builtin.pip:
+      excutable: pip3.9
+      name: "{{ item }}"
+    loop:
+    - cryptography
+    - pymysql
+
+  - name: creating sysytem user
+    ansible.builtin.user:
+      name: roboshop
+      comment: roboshop system user
+      system: true
+      shell: /sbin/login
+      home: /app
+
+  - name: remove app directory 
+    ansible.builtin.file:
+      path: /app
+      state: absent
+
+  - name: creating app directory 
+    ansible.builtin.file:
+      path: /app
+      state: present
+
+  - name: removing the shipping application file
+    ansible.builtin.file:
+      path: /tmp/shipping.zip
+      state: absent
+
+  - name: downloading shipping application
+    ansible.builtin.geturl:
+      url: https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip
+      dest: /tmp/shipping.zip
+
+  - name: unzipping application
+    ansible.builtin.archive:
+      src: /tmp/shipping.zip
+      dest: /app
+      remote_src: yes
+
+  - name: installing dependencies
+    ansible.builtin.command: mvn clean package
+    args:
+      chdir: /app
+
+  - name: moving jar file
+    ansible.builtin.command: mv target/shipping-1.0.jar shipping.jar 
+
+  - name: copy shipping service
+    ansible.builtin.copy:
+      src: shipping.service
+      dest: /etc/systemd/system/shipping.service
+
+  - name: importing shipping data to mysql
+    community.mysql.mysql_db:
+      state: import
+      name: all
+      login_host: <mysql ipaddress>
+      login_user: root
+      login_password: RoboShop@1
+      target: "{{ item }}"
+    loop:
+    - /app/db/schema.sql
+    - /app/db/app-user.sql 
+    - /app/db/master-data.sql  
+
+
+  - name: reload and start the shipping server
+    ansible.buiktin.systemd_service:
+      name: shipping
+      system: started
+      enabled: true
+      daemon_reload:true
+
+

@@ -1,0 +1,86 @@
+- name: setup catalogue
+  hosts: catalogue
+  become: yes
+  tasks:
+  - name: disable nodejs
+    ansible.builtin.command: dnf disable nodejs -y
+
+  - name: enable nodejs:20
+    ansible.builtin.command: dnf enable nodejs:20 -y 
+
+  - name: installing nodejs
+    ansible.builtin.package:
+      name: nodejs   
+      state: present
+
+  - name: create a roboshop system user
+    ansible.builtin.user:
+      name: roboshop
+      comment: 'roboshop system user'
+      system: true
+      shell: /sbin/nologin
+      home: /app
+
+  - name: remove app directory
+    ansible.builtin.file:
+      path: /app
+      state: absent
+
+  - name: create app directory
+    ansible.builtin.file:
+      path: /app
+      state: present
+
+  - name: delete catalogue file
+    ansible.builtin.file: 
+      path: /tmp/catalogue.zip
+      state: absent
+  
+  - name: download the catalogue application
+    ansible.builtin.geturl:
+      url: https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip 
+      dest: /tmp/catalogue.zip
+
+  - name: unzip the application in app directory
+    ansible.builtin.unarchive:
+      src: /tmp/catalogue.zip
+      dest: /app
+      remote_src: yes
+    
+  - name: installing dependencies
+    community.general.npm:
+      name: npm install
+      path: /app
+
+  - name: copy catalogue service
+    ansible.builtin.copy:
+      src: catalogue.service
+      dest: /etc/systemd/system/catalogue.service
+
+  - name: copy mango.repo
+    ansible.builtin.copy:
+      src: mongo.repo
+      dest: /etc/yum.repos.d/mongo.repo
+
+  - name: installing mongodb
+    ansible.builtin.package:
+      name: mongodb-mongosh
+      state: present
+
+  - name: connect to mongodb catalogue
+    ansible.builtin.command: mongosh <mangodb ipaddress> --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')"
+      register: catalogue_output
+
+  - name: load products into mongo db
+    ansible.builtin.shell: mongosh --host MONGODB-SERVER-IPADDRESS </app/db/master-data.js
+    when: catalogue_output.stdout | int < 0
+
+  - name: daemon reload
+    ansible.builtin.systemd_service:
+      name: catalogue
+      enabled: true
+      state: started
+      daemon_reload: true
+
+
+
