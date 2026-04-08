@@ -42,7 +42,7 @@
       state: absent
 
   - name: downloading shipping application
-    ansible.builtin.geturl:
+    ansible.builtin.get_url:
       url: https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip
       dest: /tmp/shipping.zip
 
