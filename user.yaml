@@ -1,5 +1,5 @@
-- namne: setup user
-  hosta: user 
+- name: setup user
+  hosts: user 
   become: yes
   tasks:
   - name: disable default nodejs
