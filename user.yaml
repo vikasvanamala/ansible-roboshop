@@ -37,7 +37,7 @@
       state: absent
 
   - name: downloading user application to app directory
-    ansible.builtin.geturl:
+    ansible.builtin.get_url:
       url: https://roboshop-artifacts.s3.amazonaws.com/user-v3.zip
       dest: /tmp/user.zip
 
@@ -63,6 +63,6 @@
     ansible.builtin.systemd_service:
       name: user
       daemon_reload: true
-      enabled: true
+      enabled: yes
       state: started
 
