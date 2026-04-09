@@ -56,7 +56,7 @@
       src: catalogue.service
       dest: /etc/systemd/system/catalogue.service
 
-  - name: copy mango.repo
+  - name: copy mongo repo
     ansible.builtin.copy:
       src: mongo.repo
       dest: /etc/yum.repos.d/mongo.repo
@@ -67,11 +67,11 @@
       state: present
 
   - name: connect to mongodb catalogue
-    ansible.builtin.command: mongosh 172.31.11.76 --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')"
+    ansible.builtin.command: mongosh mongodb --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')"
     register: catalogue_output
 
   - name: load products into mongo db
-    ansible.builtin.shell: mongosh --host 172.31.11.76 </app/db/master-data.js
+    ansible.builtin.shell: mongosh --host mongodb </app/db/master-data.js
     when: catalogue_output.stdout | int < 0
 
   - name: daemon reload
