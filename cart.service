@@ -3,8 +3,8 @@ Description = Cart Service
 [Service]
 User=roboshop
 // highlight-start
-Environment=REDIS_HOST=172.31.8.230        # <REDIS-SERVER-IP address>
-Environment=CATALOGUE_HOST=172.31.2.140    # <catalogue server ip address>
+Environment=REDIS_HOST={{redis_host}}        # <REDIS-SERVER-IP address>
+Environment=CATALOGUE_HOST={{catalogue_host}}    # <catalogue server ip address>
 Environment=CATALOGUE_PORT=8080
 // highlight-end
 ExecStart=/bin/node /app/server.js
