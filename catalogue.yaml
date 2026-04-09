@@ -67,11 +67,11 @@
       state: present
 
   - name: connect to mongodb catalogue
-    ansible.builtin.command: mongosh mongodb --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')"
+    ansible.builtin.command: mongosh mongodb_host --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')"
     register: catalogue_output
 
   - name: load products into mongo db
-    ansible.builtin.shell: mongosh --host mongodb </app/db/master-data.js
+    ansible.builtin.shell: mongosh --host mongodb_host </app/db/master-data.js
     when: catalogue_output.stdout | int < 0
 
   - name: daemon reload
